@@ -15,7 +15,7 @@ io.on('connection',(socket) => {
   // const offset = socket.handshake.offset
   // console.log('a user connected' + offset);
   socket.join(room)
-  console.log(socket.id +' 加入了房间：'+ room)
+  console.log(socket.rooms)
 
 //   if(offset) {
 //     for (const event of await fetchMissedEventFromDatabase(offset)){
@@ -32,9 +32,20 @@ io.on('connection',(socket) => {
 
   socket.on('roomMsg', function (msg){
     socket.to(room).emit('roomMsg', msg)
+    
+    console.log(msg.data)
 
   })
-// });
+  var timer = null
+  socket.on('textData', function (msg){
+    var obj = {'msg': msg}
+    console.log(obj)
+    socket.to(room).emit('gettextData', msg)
+  })
+  socket.on("disconnecting", () => {
+    console.log(socket.rooms)
+  });
+  // });
 
 // setInterval(async () => {
 //   const event = {
@@ -47,3 +58,4 @@ io.on('connection',(socket) => {
 })
 
 io.listen(3000);
+console.log('server on 3000')
